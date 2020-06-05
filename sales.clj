@@ -14,7 +14,7 @@
     (def data_by_record (clojure.string/split line #"\|"))
     (def cust_ID_Name_Map (assoc cust_ID_Name_Map (get data_by_record 0) (get data_by_record 1)))
     ;(println cust_ID_Name_Map)
-    (def restData (str ":[" (get data_by_record 1) " , " (get data_by_record 2) " , " (get data_by_record 3) "]\n"))
+    (def restData (str ":[" (get data_by_record 1) ", " (get data_by_record 2) ", " (get data_by_record 3) "]"))
     ;(println restData)
     (def print_Customer_Info_Map (assoc print_Customer_Info_Map (get data_by_record 0) restData))
     )
@@ -24,9 +24,14 @@
 ; when choice is 1, then display customers data
 (defn displayCustomerTable []
   ;(println "in 1st option")
+  (def print_Customer_Info_Map (into (sorted-map) print_Customer_Info_Map))
+  (println "-------------------------------------------------")
+  (println "\t\tCUSTOMER TABLE")
+  (println "-------------------------------------------------")
   ; https://stackoverflow.com/questions/6685916/how-to-iterate-over-map-keys-and-values-in-clojure
    (doseq [[k v] print_Customer_Info_Map]
      (println (str k (get print_Customer_Info_Map k))))
+  (println "-------------------------------------------------")
   ;(println print_Customer_Info_Map)
   ;(println "after doseq")
   )
@@ -48,7 +53,7 @@
 
 ; Main displayMenu function, that starts this application
 (defn displayMenu []
-  (println (loadCustomerData "cust.txt"))
+  (loadCustomerData "cust.txt")
   ;(loadData "prod.txt")
   ;(loadData "sales.txt")
   (println "*** Sales Menu ***\n------------------\n1. Display Customer Table\n2. Display Product Table\n3. Display Sales Table\n4. Total Sales for Customer\n5. Total Count for Product\n6. Exit\nEnter an option?")
