@@ -1,0 +1,18 @@
+Clojure Commands:
+To install-->
+	git clone https://github.com/clojure/clojure.git
+	cd clojure
+	mvn -Plocal -Dmaven.test.skip=true package
+
+
+To run-->
+	java -jar clojure.jar
+	
+Other Commands -->
+	(load-file "abc.clj")
+	java -cp clojure.jar clojure.main sales.clj
+	
+	
+IMPORTANT LINKS-->
+; https://clojure.org/guides/learn/hashed_colls
+; https://clojuredocs.org/
