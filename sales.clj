@@ -16,9 +16,9 @@
 
 (def totalSales_By_Product_Map {})
 (def totalCost 0.0)
-(def totalCount 0)
 
-(def totalProductCount_Map {})
+(def totalItemCount 0)
+
 
 ; Loads customer data before printing menu
 (defn loadCustomerData [fileName]
@@ -130,6 +130,8 @@
     ;(println itemCount)
     (def totalSales_By_Product_Map (assoc totalSales_By_Product_Map k (* (Float/parseFloat productCost)  (Integer/parseInt itemCount) ))))
 
+  (def totalCost 0.0)
+
   (println "Enter customer name to count total sale : ")
   (def customerName (read-line))
     ; https://stackoverflow.com/questions/18176372/clojure-get-map-key-by-value
@@ -151,7 +153,37 @@
     (println "-------------------------------------------------")
     )
 
+; when choice is 5, then calculate and display total count of given product
+(defn totalCountForProduct
+  "This will return the total count of the product for given customer"
+  []
 
+
+  (println "Enter product name to count total items : ")
+  (def productName (read-line))
+  ;(println productName)
+  ; https://stackoverflow.com/questions/18176372/clojure-get-map-key-by-value
+  (def prodIdForSales (keep #(when (= (val %) productName) (key %)) prod_ID_Name_Map))
+  ;(println prodIdForSales)
+  ;(println (apply str prodIdForSales))
+  (def totalItemCount 0)
+
+  (doseq [[k v] sales_ID_Prod_ID_Map]
+    ;(println v)
+    ;(println (apply str prodIdForSales))
+    (if (= (Integer/parseInt v) (Integer/parseInt (apply str prodIdForSales)))
+      (do (println (type (Long/parseLong (get sales_ID_ItemCount_Map k)) ))
+          (println (type totalItemCount))
+        (def totalItemCount (+  totalItemCount (Long/parseLong (get sales_ID_ItemCount_Map k))) )                         ;(Integer/parseInt totalItemCount) (Integer/parseInt (get sales_ID_ItemCount_Map k))
+          (println "inside if after count"))
+      )
+    )
+
+  (println "-------------------------------------------------")
+  (println (str productName ": " totalItemCount))
+  (println "-------------------------------------------------")
+
+  )
 
 ; Calls all 3 load functions
 (defn loadData []
@@ -172,7 +204,7 @@
         (= choice "2") (displayProductTable)
         (= choice "3") (displaySalesTable)
         (= choice "4") (totalSalesForCustomer)
-        (= choice "5") (println "Display Total sale")
+        (= choice "5") (totalCountForProduct)
         (= choice "6") (do (println "Good Bye!") (System/exit 0))
         :else (println "Please enter correct choice between 1 to 6")
         )
