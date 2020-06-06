@@ -14,6 +14,10 @@
 (def sales_ID_ItemCount_Map {})
 (def print_Sales_Info_Map {})
 
+(def totalSales_By_Product_Map {})
+
+(def totalProductCount_Map {})
+
 ; Loads customer data before printing menu
 (defn loadCustomerData [fileName]
   (def lines (clojure.string/split-lines (slurp fileName)))
@@ -86,9 +90,9 @@
   (doseq [line lines]
     ;(println line)
     (def data_by_record (clojure.string/split line #"\|"))
-    (def sales_ID_Cust_ID_Map (assoc cust_ID_Name_Map (get data_by_record 0) (get data_by_record 1)))
-    (def sales_ID_Prod_ID_Map (assoc cust_ID_Name_Map (get data_by_record 0) (get data_by_record 2)))
-    (def sales_ID_ItemCount_Map (assoc cust_ID_Name_Map (get data_by_record 0) (get data_by_record 3)))
+    (def sales_ID_Cust_ID_Map (assoc sales_ID_Cust_ID_Map (get data_by_record 0) (get data_by_record 1)))
+    (def sales_ID_Prod_ID_Map (assoc sales_ID_Prod_ID_Map (get data_by_record 0) (get data_by_record 2)))
+    (def sales_ID_ItemCount_Map (assoc sales_ID_ItemCount_Map (get data_by_record 0) (get data_by_record 3)))
     ;(println cust_ID_Name_Map)
     (def restData (str ":[" (get cust_ID_Name_Map (get data_by_record 1)) ", " (get prod_ID_Name_Map (get data_by_record 2)) ", " (get data_by_record 3) "]"))
     ;(println restData)
@@ -110,17 +114,34 @@
   (println "-------------------------------------------------")
   )
 
+;(doseq [[k v] sales_ID_Cust_ID_Map]
+;  (def productId (get sales_ID_Prod_ID_Map k))
+;  (def productCost (get prod_ID_Cost_Map productId))
+;  (def itemCount (get sales_ID_ItemCount_Map k))
+;  (def totalSales_By_Product_Map (assoc totalSales_By_Product_Map k (* productCost itemCount)))
+;  )
+
 (defn totalSalesForCustomer
   "This will count total sales of customer"
   []
-  (println "Enter customer name to count total sale : ")
-  (let [customerName (read-line)]
-    ; https://stackoverflow.com/questions/18176372/clojure-get-map-key-by-value
-    (def custIDForName (keep #(when (= (val %) customerName) (key %)) cust_ID_Name_Map))
-    ;(println custIDForName)
-    (if (empty? custIDForName) (println "Customer of given name does not exist in record") (println custIDForName))
+  ;(println "Enter customer name to count total sale : ")
+  ;(def customerName (read-line))
+  ;  ; https://stackoverflow.com/questions/18176372/clojure-get-map-key-by-value
+  ;  (def custIDForName (keep #(when (= (val %) customerName) (key %)) cust_ID_Name_Map))
+  ;  (println custIDForName)
+  ;(println "Counting...")
+
+  (doseq [[k v] sales_ID_Cust_ID_Map]
+    (def productId (get sales_ID_Prod_ID_Map k))
+    (def productCost (get prod_ID_Cost_Map productId))
+    (def itemCount (get sales_ID_ItemCount_Map k))
+    ;(println productCost)
+    ;(println itemCount)
+    (def totalSales_By_Product_Map (assoc totalSales_By_Product_Map k (* (Float/parseFloat productCost)  (Integer/parseInt itemCount) ))))
+
+  
+
     )
-  )
 
 
 
