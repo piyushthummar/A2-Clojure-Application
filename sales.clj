@@ -110,13 +110,30 @@
   (println "-------------------------------------------------")
   )
 
+(defn totalSalesForCustomer
+  "This will count total sales of customer"
+  []
+  (println "Enter customer name to count total sale : ")
+  (let [customerName (read-line)]
+    ; https://stackoverflow.com/questions/18176372/clojure-get-map-key-by-value
+    (def custIDForName (keep #(when (= (val %) customerName) (key %)) cust_ID_Name_Map))
+    ;(println custIDForName)
+    (if (empty? custIDForName) (println "Customer of given name does not exist in record") (println custIDForName))
+    )
+  )
 
-; Main displayMenu function, that starts this application
-(defn displayMenu []
+
+
+; Calls all 3 load functions
+(defn loadData []
   (loadCustomerData "cust.txt")
   (loadProductData "prod.txt")
   (loadSalesData "sales.txt")
+  )
 
+; Main displayMenu function, that starts this application
+(defn displayMenu []
+  (loadData)
   (println "*** Sales Menu ***\n------------------\n1. Display Customer Table\n2. Display Product Table\n3. Display Sales Table\n4. Total Sales for Customer\n5. Total Count for Product\n6. Exit\nEnter an option?")
   (let [choice (read-line)]              ;(Integer/parseInt (read-line))
     ;(println "Your choice is " choice)
@@ -125,7 +142,7 @@
         (= choice "1") (displayCustomerTable)
         (= choice "2") (displayProductTable)
         (= choice "3") (displaySalesTable)
-        (= choice "4") (println "Display Total items")
+        (= choice "4") (totalSalesForCustomer)
         (= choice "5") (println "Display Total sale")
         (= choice "6") (do (println "Good Bye!") (System/exit 0))
         :else (println "Please enter correct choice between 1 to 6")
