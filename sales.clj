@@ -15,6 +15,8 @@
 (def print_Sales_Info_Map {})
 
 (def totalSales_By_Product_Map {})
+(def totalCost 0.0)
+(def totalCount 0)
 
 (def totalProductCount_Map {})
 
@@ -100,6 +102,7 @@
     )
   ;(println print_Customer_Info_Map)
   )
+
 ;  when choice is 3, then display product data
 (defn displaySalesTable
   "It will display sales table in a format"
@@ -114,23 +117,11 @@
   (println "-------------------------------------------------")
   )
 
-;(doseq [[k v] sales_ID_Cust_ID_Map]
-;  (def productId (get sales_ID_Prod_ID_Map k))
-;  (def productCost (get prod_ID_Cost_Map productId))
-;  (def itemCount (get sales_ID_ItemCount_Map k))
-;  (def totalSales_By_Product_Map (assoc totalSales_By_Product_Map k (* productCost itemCount)))
-;  )
-
+; when choice is 4, then calculate and display total purchase of given customer
 (defn totalSalesForCustomer
   "This will count total sales of customer"
   []
-  ;(println "Enter customer name to count total sale : ")
-  ;(def customerName (read-line))
-  ;  ; https://stackoverflow.com/questions/18176372/clojure-get-map-key-by-value
-  ;  (def custIDForName (keep #(when (= (val %) customerName) (key %)) cust_ID_Name_Map))
-  ;  (println custIDForName)
-  ;(println "Counting...")
-
+  ; counting total cost for each sale ID
   (doseq [[k v] sales_ID_Cust_ID_Map]
     (def productId (get sales_ID_Prod_ID_Map k))
     (def productCost (get prod_ID_Cost_Map productId))
@@ -139,8 +130,25 @@
     ;(println itemCount)
     (def totalSales_By_Product_Map (assoc totalSales_By_Product_Map k (* (Float/parseFloat productCost)  (Integer/parseInt itemCount) ))))
 
-  
+  (println "Enter customer name to count total sale : ")
+  (def customerName (read-line))
+    ; https://stackoverflow.com/questions/18176372/clojure-get-map-key-by-value
+    (def custIDForName (keep #(when (= (val %) customerName) (key %)) cust_ID_Name_Map))
+    ;(println custIDForName)
 
+    ;(println (type custIDForName))
+    ;(println (type (str custIDForName)))
+
+    (doseq [[k v] sales_ID_Cust_ID_Map]
+      ;(println (type v))
+      (if (= (Integer/parseInt v) (Integer/parseInt (apply str custIDForName)))
+        (def totalCost (+ totalCost (get totalSales_By_Product_Map k) ) )                          ;(Float/parseFloat totalCost) (Float/parseFloat (get totalSales_By_Product_Map k))
+        )
+      )
+    ; https://clojuredocs.org/clojure.core/with-precision
+    (println "-------------------------------------------------")
+    (println (str customerName ": $" (format "%.2f" totalCost)))                     ;(with-precision 2 (Float/parseFloat totalCost))
+    (println "-------------------------------------------------")
     )
 
 
