@@ -5,6 +5,11 @@
 (def cust_ID_Name_Map {})
 (def print_Customer_Info_Map {})
 
+(def prod_ID_Name_Map {})
+(def prod_ID_Cost_Map {})
+(def print_Prod_Info_Map {})
+
+; Loads customer data before printing menu
 (defn loadCustomerData [fileName]
   (def lines (clojure.string/split-lines (slurp fileName)))
   ; https://stackoverflow.com/questions/25948813/read-line-by-line-for-big-files
@@ -24,6 +29,7 @@
 ; when choice is 1, then display customers data
 (defn displayCustomerTable []
   ;(println "in 1st option")
+  ; https://clojuredocs.org/clojure.core/sorted-map
   (def print_Customer_Info_Map (into (sorted-map) print_Customer_Info_Map))
   (println "-------------------------------------------------")
   (println "\t\tCUSTOMER TABLE")
@@ -36,24 +42,50 @@
   ;(println "after doseq")
   )
 
-;  when choice is 2, then display product data
-(defn displayProductTable
-  "It will display product table in a format"
-  []
-  (println "inside display product function")
+; Loads product data before printing menu
+(defn loadProductData [fileName]
+  (def lines (clojure.string/split-lines (slurp fileName)))
+  ; https://stackoverflow.com/questions/25948813/read-line-by-line-for-big-files
+  ; https://lethain.com/reading-file-in-clojure/
+  (doseq [line lines]
+    ;(println line)
+    (def data_by_record (clojure.string/split line #"\|"))
+    (def prod_ID_Name_Map (assoc prod_ID_Name_Map (get data_by_record 0) (get data_by_record 1)))
+    (def prod_ID_Cost_Map (assoc prod_ID_Cost_Map (get data_by_record 0) (get data_by_record 2)))
+    ;(println cust_ID_Name_Map)
+    (def restData (str ":[" (get data_by_record 1) ", " (get data_by_record 2) "]"))
+    ;(println restData)
+    (def print_Prod_Info_Map (assoc print_Prod_Info_Map (get data_by_record 0) restData))
+    )
+  ;(println print_Customer_Info_Map)
   )
 
 ;  when choice is 2, then display product data
 (defn displayProductTable
   "It will display product table in a format"
   []
-  (println "inside display product function")
+  (def print_Prod_Info_Map (into (sorted-map) print_Prod_Info_Map))
+  (println "-------------------------------------------------")
+  (println "\t\tPRODUCT TABLE")
+  (println "-------------------------------------------------")
+  ; https://stackoverflow.com/questions/6685916/how-to-iterate-over-map-keys-and-values-in-clojure
+  (doseq [[k v] print_Prod_Info_Map]
+    (println (str k (get print_Prod_Info_Map k))))
+  (println "-------------------------------------------------")
+  )
+
+;  when choice is 3, then display product data
+(defn displaySalesTable
+  "It will display product table in a format"
+  []
+  (println "inside display sales function")
   )
 
 
 ; Main displayMenu function, that starts this application
 (defn displayMenu []
   (loadCustomerData "cust.txt")
+  (loadProductData "prod.txt")
   ;(loadData "prod.txt")
   ;(loadData "sales.txt")
   (println "*** Sales Menu ***\n------------------\n1. Display Customer Table\n2. Display Product Table\n3. Display Sales Table\n4. Total Sales for Customer\n5. Total Count for Product\n6. Exit\nEnter an option?")
