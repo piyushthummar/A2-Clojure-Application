@@ -136,6 +136,7 @@
   (def customerName (read-line))
     ; https://stackoverflow.com/questions/18176372/clojure-get-map-key-by-value
     (def custIDForName (keep #(when (= (val %) customerName) (key %)) cust_ID_Name_Map))
+    ;(if (empty? custIDForName) (def totalCost 0.0) ())
     ;(println custIDForName)
 
     ;(println (type custIDForName))
@@ -164,18 +165,21 @@
   ;(println productName)
   ; https://stackoverflow.com/questions/18176372/clojure-get-map-key-by-value
   (def prodIdForSales (keep #(when (= (val %) productName) (key %)) prod_ID_Name_Map))
+  (def totalItemCount 0)
+
+  ;(if (empty? prodIdForSales) (def totalItemCount 0) ())
   ;(println prodIdForSales)
   ;(println (apply str prodIdForSales))
-  (def totalItemCount 0)
 
   (doseq [[k v] sales_ID_Prod_ID_Map]
     ;(println v)
     ;(println (apply str prodIdForSales))
     (if (= (Integer/parseInt v) (Integer/parseInt (apply str prodIdForSales)))
-      (do (println (type (Long/parseLong (get sales_ID_ItemCount_Map k)) ))
-          (println (type totalItemCount))
-        (def totalItemCount (+  totalItemCount (Long/parseLong (get sales_ID_ItemCount_Map k))) )                         ;(Integer/parseInt totalItemCount) (Integer/parseInt (get sales_ID_ItemCount_Map k))
-          (println "inside if after count"))
+      (def totalItemCount (+  totalItemCount (Long/parseLong (get sales_ID_ItemCount_Map k))) )
+      ;(do (println (type (Long/parseLong (get sales_ID_ItemCount_Map k)) ))
+      ;    (println (type totalItemCount))
+      ;  (def totalItemCount (+  totalItemCount (Long/parseLong (get sales_ID_ItemCount_Map k))) )                         ;(Integer/parseInt totalItemCount) (Integer/parseInt (get sales_ID_ItemCount_Map k))
+      ;    (println "inside if after count"))
       )
     )
 
