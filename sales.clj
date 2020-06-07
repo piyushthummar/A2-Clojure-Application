@@ -136,22 +136,29 @@
   (def customerName (read-line))
     ; https://stackoverflow.com/questions/18176372/clojure-get-map-key-by-value
     (def custIDForName (keep #(when (= (val %) customerName) (key %)) cust_ID_Name_Map))
-    ;(if (empty? custIDForName) (def totalCost 0.0) ())
+
+    (println "-----------------------------------------------------")
+    (if (empty? custIDForName) (do (def totalCost 0.0) (println "Given customer is not present in the customer table.") ) (doseq [[k v] sales_ID_Cust_ID_Map]
+                                                     ;(println (type v))
+                                                     (if (= (Integer/parseInt v) (Integer/parseInt (apply str custIDForName)))
+                                                       (def totalCost (+ totalCost (get totalSales_By_Product_Map k) ) )                          ;(Float/parseFloat totalCost) (Float/parseFloat (get totalSales_By_Product_Map k))
+                                                       )
+                                                     ))
     ;(println custIDForName)
 
     ;(println (type custIDForName))
     ;(println (type (str custIDForName)))
 
-    (doseq [[k v] sales_ID_Cust_ID_Map]
-      ;(println (type v))
-      (if (= (Integer/parseInt v) (Integer/parseInt (apply str custIDForName)))
-        (def totalCost (+ totalCost (get totalSales_By_Product_Map k) ) )                          ;(Float/parseFloat totalCost) (Float/parseFloat (get totalSales_By_Product_Map k))
-        )
-      )
+    ;(doseq [[k v] sales_ID_Cust_ID_Map]
+    ;  ;(println (type v))
+    ;  (if (= (Integer/parseInt v) (Integer/parseInt (apply str custIDForName)))
+    ;    (def totalCost (+ totalCost (get totalSales_By_Product_Map k) ) )                          ;(Float/parseFloat totalCost) (Float/parseFloat (get totalSales_By_Product_Map k))
+    ;    )
+    ;  )
     ; https://clojuredocs.org/clojure.core/with-precision
-    (println "-------------------------------------------------")
+    ;(println "-------------------------------------------------")
     (println (str customerName ": $" (format "%.2f" totalCost)))                     ;(with-precision 2 (Float/parseFloat totalCost))
-    (println "-------------------------------------------------")
+    (println "-----------------------------------------------------")
     )
 
 ; when choice is 5, then calculate and display total count of given product
@@ -167,23 +174,28 @@
   (def prodIdForSales (keep #(when (= (val %) productName) (key %)) prod_ID_Name_Map))
   (def totalItemCount 0)
 
-  ;(if (empty? prodIdForSales) (def totalItemCount 0) ())
+  (println "-------------------------------------------------")
+  (if (empty? prodIdForSales) (do (def totalItemCount 0) (println "Given item is not present in the product table.")) (doseq [[k v] sales_ID_Prod_ID_Map]
+                                                            (if (= (Integer/parseInt v) (Integer/parseInt (apply str prodIdForSales)))
+                                                              (def totalItemCount (+  totalItemCount (Long/parseLong (get sales_ID_ItemCount_Map k))) )
+                                                              )
+                                                            ))
   ;(println prodIdForSales)
   ;(println (apply str prodIdForSales))
 
-  (doseq [[k v] sales_ID_Prod_ID_Map]
-    ;(println v)
-    ;(println (apply str prodIdForSales))
-    (if (= (Integer/parseInt v) (Integer/parseInt (apply str prodIdForSales)))
-      (def totalItemCount (+  totalItemCount (Long/parseLong (get sales_ID_ItemCount_Map k))) )
-      ;(do (println (type (Long/parseLong (get sales_ID_ItemCount_Map k)) ))
-      ;    (println (type totalItemCount))
-      ;  (def totalItemCount (+  totalItemCount (Long/parseLong (get sales_ID_ItemCount_Map k))) )                         ;(Integer/parseInt totalItemCount) (Integer/parseInt (get sales_ID_ItemCount_Map k))
-      ;    (println "inside if after count"))
-      )
-    )
+  ;(doseq [[k v] sales_ID_Prod_ID_Map]
+  ;  ;(println v)
+  ;  ;(println (apply str prodIdForSales))
+  ;  (if (= (Integer/parseInt v) (Integer/parseInt (apply str prodIdForSales)))
+  ;    (def totalItemCount (+  totalItemCount (Long/parseLong (get sales_ID_ItemCount_Map k))) )
+  ;    ;(do (println (type (Long/parseLong (get sales_ID_ItemCount_Map k)) ))
+  ;    ;    (println (type totalItemCount))
+  ;    ;  (def totalItemCount (+  totalItemCount (Long/parseLong (get sales_ID_ItemCount_Map k))) )                         ;(Integer/parseInt totalItemCount) (Integer/parseInt (get sales_ID_ItemCount_Map k))
+  ;    ;    (println "inside if after count"))
+  ;    )
+  ;  )
 
-  (println "-------------------------------------------------")
+  ;(println "-------------------------------------------------")
   (println (str productName ": " totalItemCount))
   (println "-------------------------------------------------")
 
